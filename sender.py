@@ -56,6 +56,7 @@ class Playback:
     if self.filename != None:
       self.loadFile()
 
+
   def loadFile(self, filename=None):
     if filename is None:
       filename = self.filename
@@ -82,10 +83,21 @@ class Playback:
         # keep track of the duration
         self.duration = self.recording['frames'][frame]['time']
 
+        # convert universe to int from str
+        self.recording['frames'][frame]['dmx'] = {int(uni):data for uni, data in self.recording['frames'][frame]['dmx'].items()}
+
+        # wrangle the frames into tuples that the sACN library likes
+        for uni in self.recording['frames'][frame]['dmx']:
+          # check it's in the activated outputs
+          if uni in self.server.get_active_outputs():
+            # what an excellent one liner
+            self.recording['frames'][frame]['dmx'][uni] = tuple(self.recording['frames'][frame]['dmx'][uni][str(ch)] if str(ch) in self.recording['frames'][frame]['dmx'][uni] else 0 for ch in range(1,512))
+
       self.recording['start'] = 0
 
     #TODO: add _event emitter_
     self.play()
+
 
   def activateUniverses(self,universes=None):
     if universes is None:
@@ -100,11 +112,11 @@ class Playback:
   def deactivateUniverses(self,universes=None):
     if universes is None:
       universes = self.server.get_active_outputs()
-      
+
     for uni in self.universes:
       self.server.deactivate_output(uni)
 
-  
+
   def play(self, loop=True):
     for timer in self.timers:
       self.timers[timer].restart()
@@ -114,6 +126,7 @@ class Playback:
       self.timerLoop = Timer(self.duration, self.play)
       self.timerLoop.start()
 
+
   def send(self,frame=None):
     if frame is None:
       return
@@ -122,12 +135,10 @@ class Playback:
 
     # loop through the universes in that frame
     for uni in self.recording['frames'][frame]['dmx']:
-      uniInt = int(uni)
-      # check it's in the activated outputs
-      if uniInt in self.server.get_active_outputs():
-        self.server[uniInt].dmx_data = tuple(self.recording['frames'][frame]['dmx'][uni][str(ch)] if str(ch) in self.recording['frames'][frame]['dmx'][uni] else 0 for ch in range(1,512))
+      self.server[uni].dmx_data = self.recording['frames'][frame]['dmx'][uni]
 
     self.server.flush()
+
 
   def close(self):
     self.server.stop()
