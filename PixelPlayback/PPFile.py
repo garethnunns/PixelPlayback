@@ -1,6 +1,6 @@
 from datetime import datetime
 import json
-from util import currentTimestamp
+from util import currentTimestamp, outputFilename
 
 # Pixel Playback File
 class PPFile:
@@ -46,16 +46,6 @@ class PPFile:
     self.updateFrames()
 
 
-  def outputFilename(self):
-    dateTime = datetime.now()
-    filename = dateTime.strftime("%Y-%m-%d__%H-%M-%S")
-
-    if self.filename != "":
-      filename = filename + "_" + self.filename
-
-    return filename + '.pp'
-
-
   def updateUniverses(self,universes=[]):
     self.universes |= set([uni for uni in universes])
 
@@ -74,7 +64,7 @@ class PPFile:
     self.updateUniverses()
     self.updateFrames()
 
-    with open(self.outputDir + self.outputFilename(), "w") as f:
+    with open(self.outputDir + outputFilename(self.filename, "pp"), "w") as f:
       f.write(json.dumps(self.output, indent=2))
 
 
