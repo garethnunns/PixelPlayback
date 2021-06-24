@@ -23,14 +23,16 @@ class Log:
     if data is None:
       data = self.data
 
-    data["time"] = {
+    data = {"data": data}
+
+    data["_time"] = {
       "unix": currentTimestamp(),
       "utc": currentUTC()
     }
 
     # create today's logging file (JSON)
     with open(os.path.join(self.logFolder, outputFilename(self.name, "pp.log.jsonl", False)), 'a+') as f:
-      f.write(json.dumps(data) + "\n")
+      f.write(json.dumps(data, sort_keys=True) + "\n")
 
     # create today's logging file (CSV)
     with open(os.path.join(self.logFolder, outputFilename(self.name, "pp.log.csv", False)), 'a+') as f:

@@ -46,7 +46,11 @@ pip3 install sacn netifaces opencv-python
 sudo raspi-config
 ````
 
-Go to **Advanced Options > Expanded Filesystem** and reboot
+- Go to **Advanced Options > Expanded Filesystem** and enable
+
+- Go to **Interfacing Options > 1-Wire** and **Yes**
+
+- Reboot
 
 3. Update and upgrade any existing packages
 
@@ -80,6 +84,22 @@ sudo apt-get install -y libatlas-base-dev gfortran
 sudo apt-get install -y libilmbase-dev libopenexr-dev libgstreamer1.0-dev
 
 # It is left as a task to the reader to work out if all of that's needed...
+````
+
+6. Enable temperature probe modules
+
+````bash
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+sudo nano /etc/modules
+
+# then add the following lines
+w1_gpio
+w1_therm
+# exit and save
+
+# then likely reboot
+sudo reboot
 ````
 
 ## DDNS

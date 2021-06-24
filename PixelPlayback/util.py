@@ -32,11 +32,11 @@ class SetInterval(Timer):
 
 
 def nestedDictValues(d):
-  for v in d.values():
-    if isinstance(v, dict):
-      yield from nestedDictValues(v)
+  for v in sorted(d.keys()):
+    if isinstance(d[v], dict):
+      yield from nestedDictValues(d[v])
     else:
-      yield v
+      yield d[v]
 
 
 def dictValuesToCSV(d):
@@ -44,7 +44,7 @@ def dictValuesToCSV(d):
 
 
 def nestedDictKeys(d):
-  for v in d.keys():
+  for v in sorted(d.keys()):
     if isinstance(d[v], dict):
       yield from nestedDictKeys(d[v])
     else:
