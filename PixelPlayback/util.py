@@ -26,6 +26,10 @@ def outputFilename(name="", ext="", time=True):
 
 
 class SetInterval(Timer):
+    def __init__(self, *args, **kwargs):
+      super().__init__(*args, **kwargs)
+      self.function(*self.args, **self.kwargs)
+
     def run(self):
         while not self.finished.wait(self.interval):
             self.function(*self.args, **self.kwargs)

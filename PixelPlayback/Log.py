@@ -1,6 +1,6 @@
 import os
 import json
-from util import currentTimestamp, currentUTC, outputFilename, SetInterval, dictKeysToCSV, dictValuesToCSV
+from PixelPlayback.util import currentTimestamp, currentUTC, outputFilename, SetInterval, dictKeysToCSV, dictValuesToCSV
 
 import time #remove
 
@@ -19,11 +19,13 @@ class Log:
     self.timer = None
     self.data = {}
 
-  def writeData(self,data=None):
+  def writeData(self,success=True,data=None):
     if data is None:
       data = self.data
 
     data = {"data": data}
+
+    data["_success"] = success
 
     data["_time"] = {
       "unix": currentTimestamp(),
@@ -41,16 +43,22 @@ class Log:
         f.write(dictKeysToCSV(data) + "\n")
       f.write(dictValuesToCSV(data) + "\n")
 
+    # clear data after it has been writted
+    self.data = {}
+
   def getData(self):
     # to be overriden in subclass
     self.writeData()
 
-  def start(self):
-    # immeadiately do a log
-    self.getData()
+  def getDataCatcher(self):
+    try:
+      self.getData()
+    except Exception as e:
+      self.writeData(False,{"error":str(e)})
 
+  def start(self):
     # then keep logging (until stopped)
-    self.timer = SetInterval(self.logFrequency, self.getData)
+    self.timer = SetInterval(self.logFrequency, self.getDataCatcher)
     self.timer.start()
 
   def stop(self):

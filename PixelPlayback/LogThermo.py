@@ -1,13 +1,19 @@
 import glob
 import time
-from Log import Log
-from util import filePathToFileName
+from PixelPlayback.Log import Log
+from PixelPlayback.util import filePathToFileName
 
 class LogThermo(Log):
+  def __init__(self,frequency=30):
+    super().__init__("thermo", frequency)
+
   def getData(self):
     baseDir = '/sys/bus/w1/devices/'
     devices = glob.glob(baseDir + '28*')
     deviceFile = '/w1_slave'
+
+    if len(devices) == 0:
+      raise Exception("No temperature sensors connected")
 
     for device in devices:
       with open(device + deviceFile, 'r') as f:
