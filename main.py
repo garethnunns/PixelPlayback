@@ -1,7 +1,9 @@
 from PixelPlayback.LogSensorThermo import LogSensorThermo
+from PixelPlayback.LogSensorPower import LogSensorPower
 
 logs = [
-  LogSensorThermo(3)
+  LogSensorThermo(5),
+  LogSensorPower("/dev/tty.usbserial",5)
 ]
 
 for log in logs:

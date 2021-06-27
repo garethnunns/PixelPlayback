@@ -11,7 +11,7 @@ class LogSensorThermo(LogSensor):
     """Initialise the log with how often you would like the temperature(s) taken
 
     Args:
-        frequency (int, optional): [description]. Defaults to 30.
+        frequency (int, optional): How often to take measurements. Defaults to 30.
     """
     super().__init__("thermo", frequency)
 

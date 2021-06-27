@@ -24,6 +24,7 @@ Module | Purpose
 [sacn](https://pypi.org/project/sacn/) | Recording and playback
 [netifaces](https://pypi.org/project/netifaces/) | Getting connected network interfaces
 [opencv-python](https://pypi.org/project/opencv-python/) | Converting videos to pixels
+[pyserial](https://pypi.org/project/pyserial/) | Reading power from PZEM
 
 Install with pipenv:
 ````bash
@@ -33,7 +34,7 @@ pipenv install
 
 Otherwise:
 ````bash
-pip3 install sacn netifaces opencv-python
+pip3 install sacn netifaces opencv-python pyserial
 ````
 
 All code is linted with pylint and in the root is a .pylintrc file defining the standards.
