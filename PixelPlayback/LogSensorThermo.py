@@ -1,13 +1,26 @@
 import glob
 import time
-from PixelPlayback.Log import Log
-from PixelPlayback.util import filePathToFileName
 
-class LogThermo(Log):
+from PixelPlayback.LogSensor import LogSensor
+from PixelPlayback.Util import filePathToFileName
+
+class LogSensorThermo(LogSensor):
+  """Extends the LogSensor class, specifically designed for the DS18B20 sensors
+  """
   def __init__(self,frequency=30):
+    """Initialise the log with how often you would like the temperature(s) taken
+
+    Args:
+        frequency (int, optional): [description]. Defaults to 30.
+    """
     super().__init__("thermo", frequency)
 
   def getData(self):
+    """Get the tempature from the sensors
+
+    Raises:
+        Exception: If there are no sensors connected
+    """
     baseDir = '/sys/bus/w1/devices/'
     devices = glob.glob(baseDir + '28*')
     deviceFile = '/w1_slave'

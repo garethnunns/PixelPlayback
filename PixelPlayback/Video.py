@@ -1,10 +1,21 @@
+"""Converting a video to .pp and a few other useful functions
+"""
+
 import json
-import cv2
 import colorsys
-from PPFile import PPFile, Frame
-from util import filePathToFileName
+import cv2
+
+from PixelPlayback.Frame import Frame
+from PixelPlayback.PPFile import PPFile
+from PixelPlayback.Util import filePathToFileName
 
 def videoToPPFile(videoFilePath, mappingFilePath):
+  """Convert a video to a .pp file
+
+  Args:
+      videoFilePath (str): [description]
+      mappingFilePath ([type]): [description]
+  """
   videoFileName = filePathToFileName(videoFilePath)
 
   ppFile = PPFile(videoFileName, "videoToPPFile")
@@ -92,6 +103,14 @@ def videoToPPFile(videoFilePath, mappingFilePath):
 
 
 def loadMapping(mappingFilePath):
+  """Load a specifed mapping file
+
+  Args:
+      mappingFilePath (str): file path to the mapping file
+
+  Returns:
+      dict: Dict containing the mapping information
+  """
   mapping = json.load(open(mappingFilePath))
 
   # convert pixel types to lamba functions
@@ -102,6 +121,15 @@ def loadMapping(mappingFilePath):
 
 
 def BGRtoRGBHLS(colours):
+  """Convert BGR to RGBHLS (red, green, blue, hue, lightness, saturation)
+
+  Args:
+      colours (list): Colours in blue, green, red order as 0-255 ints
+
+  Returns:
+      tuple: Tuple containing 0-255 int values: (red, green, blue, hue, lightness, saturation)
+  """
+  # put them in RGB order
   colours.reverse()
   hls = colorsys.rgb_to_hls(*(col/255 for col in colours))
   return tuple(colours) + tuple(int(col*255) for col in hls)

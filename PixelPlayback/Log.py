@@ -1,25 +1,35 @@
-import os
 import json
-from PixelPlayback.util import currentTimestamp, currentUTC, outputFilename, SetInterval, dictKeysToCSV, dictValuesToCSV
+import os
 
-import time #remove
+from PixelPlayback.Util import DIR_LOGS, currentTimestamp, currentUTC, outputFilename, dictKeysToCSV, dictValuesToCSV
 
 class Log:
-  def __init__(self,name="",logFrequency=30):
+  """Handy way to log data
+  """
+  def __init__(self,name=""):
+    """Initialse the log, ideally with a name
+
+    Args:
+        name (str, optional): Name of the log - will determine folder & file name. Defaults to "".
+    """
     self.name = name
-    self.logFrequency = logFrequency
 
     # all logging is in /user/logs/[name]
-    self.logFolder = os.path.join(os.path.dirname(__file__), '..', 'user', 'logs', self.name)
+    self.logFolder = os.path.join(DIR_LOGS, self.name)
 
     # create the folder if it doesn't exist
     if not os.path.exists(self.logFolder):
-        os.makedirs(self.logFolder)
+      os.makedirs(self.logFolder)
 
-    self.timer = None
     self.data = {}
 
   def writeData(self,success=True,data=None):
+    """Write data to the log
+
+    Args:
+        success (bool, optional): Whether what you're logging has been successful. Defaults to True.
+        data (dict, optional): The data to log - converted to JSON & CSV. Defaults to None.
+    """
     if data is None:
       data = self.data
 
@@ -45,22 +55,3 @@ class Log:
 
     # clear data after it has been writted
     self.data = {}
-
-  def getData(self):
-    # to be overriden in subclass
-    self.writeData()
-
-  def getDataCatcher(self):
-    try:
-      self.getData()
-    except Exception as e:
-      self.writeData(False,{"error":str(e)})
-
-  def start(self):
-    # then keep logging (until stopped)
-    self.timer = SetInterval(self.logFrequency, self.getDataCatcher)
-    self.timer.start()
-
-  def stop(self):
-    if self.timer != None:
-      self.timer.cancel()

@@ -1,7 +1,7 @@
-from PixelPlayback.LogThermo import LogThermo
+from PixelPlayback.LogSensorThermo import LogSensorThermo
 
 logs = [
-  LogThermo(3)
+  LogSensorThermo(3)
 ]
 
 for log in logs:

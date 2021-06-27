@@ -13,6 +13,8 @@ View the [dev board](https://github.com/garethnunns/PixelPlayback/projects/1) to
 
 # Dev
 
+This project is currently under active development (unless I've forgot to update this, in which case it no longer is).
+
 Install Python & Pip if not already installed.
 
 Then install the following dependencies, as defined in the [Pipfile](./Pipfile).
@@ -33,6 +35,10 @@ Otherwise:
 ````bash
 pip3 install sacn netifaces opencv-python
 ````
+
+All code is linted with pylint and in the root is a .pylintrc file defining the standards.
+
+At some point I'll remove the Node out when it's all implemented in Python.
 
 # Pi
 
@@ -86,7 +92,7 @@ sudo apt-get install -y libilmbase-dev libopenexr-dev libgstreamer1.0-dev
 # It is left as a task to the reader to work out if all of that's needed...
 ````
 
-6. Enable temperature probe modules
+6. Enable temperature probe modules (DS18B20)
 
 ````bash
 sudo modprobe w1-gpio
